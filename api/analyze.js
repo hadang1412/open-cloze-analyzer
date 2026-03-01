@@ -2,18 +2,15 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-
   const { passage } = req.body;
   if (!passage) {
     return res.status(400).json({ error: 'Missing passage' });
   }
-
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return res.status(500).json({ error: 'API key not configured' });
   }
 
-  // ✅ Set SSE headers TRƯỚC, trước khi làm bất cứ điều gì
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -43,21 +40,36 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const err = await response.text();
-      // ✅ Gửi lỗi qua SSE thay vì res.status(500)
-      res.write(`data: ${JSON.stringify({ type: 'error', message: err })}\n\n`);
+      res.write(`data: ${JSON.stringify({ type: 'error', message: 'Gemini API lỗi: ' + err })}\n\n`);
       res.end();
       return;
     }
 
     const data = await response.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+
+    // ✅ Kiểm tra candidates có tồn tại không
+    const candidates = data?.candidates;
+    if (!candidates || candidates.length === 0) {
+      const reason = data?.promptFeedback?.blockReason || 'Không rõ';
+      res.write(`data: ${JSON.stringify({ type: 'error', message: 'Gemini không trả về kết quả. Lý do: ' + reason })}\n\n`);
+      res.end();
+      return;
+    }
+
+    const text = candidates[0]?.content?.parts?.[0]?.text;
+
+    // ✅ Kiểm tra text có rỗng không
+    if (!text || text.trim() === '') {
+      res.write(`data: ${JSON.stringify({ type: 'error', message: 'Gemini trả về nội dung rỗng' })}\n\n`);
+      res.end();
+      return;
+    }
 
     res.write(`data: ${JSON.stringify({ type: 'content_block_delta', delta: { type: 'text_delta', text } })}\n\n`);
     res.write('data: {"type":"message_stop"}\n\n');
     res.end();
 
   } catch (err) {
-    // ✅ Gửi lỗi qua SSE thay vì res.status(500)
     res.write(`data: ${JSON.stringify({ type: 'error', message: err.message })}\n\n`);
     res.end();
   }
