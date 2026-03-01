@@ -633,29 +633,45 @@ async function analyzePassage() {
         if (data === '[DONE]') continue;
         try {
           const evt = JSON.parse(data);
-          // Support both Anthropic format and Gemini-forwarded format
           let text = '';
           if (evt.type === 'content_block_delta' && evt.delta && evt.delta.text) {
             text = evt.delta.text;
+          }
+          // Xử lý lỗi từ server
+          if (evt.type === 'error') {
+            throw new Error(evt.message || 'Lỗi từ server');
           }
           if (text) {
             fullText += text;
             charCount += text.length;
             if (loadingTokenEl) loadingTokenEl.textContent = charCount + ' ký tự nhận được...';
           }
-        } catch {}
+        } catch (parseErr) {
+          // Bỏ qua lỗi parse từng dòng SSE
+        }
       }
     }
 
-    // Clean and parse JSON
-    let clean = fullText.replace(/```json/g, '').replace(/```/g, '').trim();
-    // If response starts with { it's already full JSON
-    // If it starts with "passage_analysis" key content, wrap it
-    if (!clean.startsWith('{')) {
-      clean = '{"passage_analysis":' + clean;
+    // ✅ FIX: Xử lý JSON an toàn hơn
+    if (!fullText || fullText.trim() === '') {
+      throw new Error('Không nhận được dữ liệu từ AI. Vui lòng thử lại!');
     }
 
-    const parsed = JSON.parse(clean);
+    // Làm sạch markdown nếu có
+    let clean = fullText.replace(/```json/g, '').replace(/```/g, '').trim();
+
+    // Tìm JSON object hợp lệ trong response
+    const jsonMatch = clean.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Dữ liệu AI không đúng định dạng. Vui lòng thử lại!');
+    }
+
+    const parsed = JSON.parse(jsonMatch[0]);
+
+    if (!parsed.gaps || !Array.isArray(parsed.gaps) || parsed.gaps.length === 0) {
+      throw new Error('AI không trả về danh sách gap. Vui lòng thử lại!');
+    }
+
     gapData = parsed.gaps;
     currentIndex = 0;
 
