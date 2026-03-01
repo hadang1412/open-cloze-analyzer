@@ -831,7 +831,7 @@ async function analyzePassage() {
       }
     }
 
-    const clean = '{"passage_analysis":' + fullText.replace(/```json|```/g, '').trim();
+    const clean =  fullText.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
 
     gapData = parsed.gaps;
