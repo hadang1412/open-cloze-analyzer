@@ -799,48 +799,7 @@ async function analyzePassage() {
 
     if (!response.ok) throw new Error('HTTP ' + response.status);
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-    let fullText = '';
-    let charCount = 0;
-
-    const loadingTokenEl = document.getElementById('loading-tokens');
-    const loadingTextEl = document.getElementById('loading-text');
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop();
-
-      for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
-        const data = line.slice(6).trim();
-        if (!data || data === '[DONE]') continue;
-        try {
-          const evt = JSON.parse(data);
-          // Gemini format
-          const text = evt.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) {
-            fullText += text;
-            charCount += text.length;
-            if (loadingTokenEl) loadingTokenEl.textContent = charCount + ' ký tự nhận được...';
-          }
-          // Anthropic format (fallback)
-          if (evt.type === 'content_block_delta' && evt.delta?.text) {
-            fullText += evt.delta.text;
-            charCount += evt.delta.text.length;
-            if (loadingTokenEl) loadingTokenEl.textContent = charCount + ' ký tự nhận được...';
-          }
-        } catch {}
-      }
-    }
-
-    const clean = '{"passage_analysis":' + fullText.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
+    const parsed = await response.json();
 
     gapData = parsed.gaps;
     currentIndex = 0;
