@@ -79,13 +79,20 @@ export default async function handler(req, res) {
       }
     );
 
+    const responseText = await response.text();
+    console.log('Gemini status:', response.status);
+    console.log('Gemini response preview:', responseText.substring(0, 300));
+
     if (!response.ok) {
-      const err = await response.text();
-      return res.status(500).json({ error: err });
+      return res.status(500).json({ error: responseText });
     }
 
-    const data = await response.json();
+    const data = JSON.parse(responseText);
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    console.log('Text length:', text.length, 'First 100:', text.substring(0,100));
+    if (!text) {
+      return res.status(500).json({ error: 'Empty response from Gemini', raw: data });
+    }
     const clean = text.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
 
