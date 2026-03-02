@@ -31,6 +31,7 @@
     flex-direction: column;
   }
 
+  /* Grain overlay */
   body::before {
     content: '';
     position: fixed;
@@ -85,6 +86,7 @@
     width: 100%;
   }
 
+  /* INPUT SCREEN */
   #input-screen { display: block; }
   #result-screen { display: none; }
 
@@ -151,6 +153,7 @@
   .btn-analyze:hover { background: #d4b87a; transform: translateY(-1px); }
   .btn-analyze:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
+  /* LOADING */
   #loading {
     display: none;
     text-align: center;
@@ -175,11 +178,13 @@
     letter-spacing: 0.05em;
   }
 
+  /* RESULT SCREEN */
   .result-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 2rem;
+    flex-wrap: gap;
     gap: 1rem;
   }
 
@@ -189,7 +194,10 @@
     color: var(--muted);
   }
 
-  .step-info span { color: var(--accent); font-weight: 500; }
+  .step-info span {
+    color: var(--accent);
+    font-weight: 500;
+  }
 
   .progress-bar {
     height: 3px;
@@ -206,6 +214,7 @@
     transition: width 0.4s ease;
   }
 
+  /* GAP CARD */
   .gap-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -244,6 +253,7 @@
     letter-spacing: 0.12em;
   }
 
+  /* Full sentence display */
   .full-sentence {
     padding: 1.25rem 1.5rem;
     border-bottom: 1px solid var(--border);
@@ -266,6 +276,7 @@
     letter-spacing: 0.05em;
   }
 
+  /* Analysis sections */
   .analysis-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
 
   .analysis-row {
@@ -345,6 +356,7 @@
     font-weight: 500;
   }
 
+  /* Answer reveal */
   .answer-section {
     margin-top: 0.5rem;
     padding-top: 1rem;
@@ -380,6 +392,7 @@
     font-size: 0.9rem;
   }
 
+  /* Navigation */
   .nav-buttons {
     display: flex;
     justify-content: space-between;
@@ -421,6 +434,7 @@
     padding: 0.6rem 1rem;
   }
 
+  /* Summary screen */
   #summary-screen {
     display: none;
     animation: slideIn 0.35s ease;
@@ -469,10 +483,23 @@
   }
 
   .answer-table tr:last-child td { border-bottom: none; }
+
   .answer-table tr:hover td { background: var(--surface2); }
 
-  .td-num { font-family: 'DM Mono', monospace; color: var(--muted); font-size: 0.8rem; width: 50px; }
-  .td-answer { font-family: 'DM Mono', monospace; color: var(--success); font-weight: 500; width: 140px; }
+  .td-num {
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    font-size: 0.8rem;
+    width: 50px;
+  }
+
+  .td-answer {
+    font-family: 'DM Mono', monospace;
+    color: var(--success);
+    font-weight: 500;
+    width: 140px;
+  }
+
   .td-context { color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
 
   .btn-new {
@@ -492,6 +519,7 @@
 
   .btn-new:hover { background: rgba(200, 169, 110, 0.1); }
 
+  /* Error */
   .error-box {
     background: rgba(255, 80, 80, 0.08);
     border: 1px solid rgba(255, 80, 80, 0.25);
@@ -503,6 +531,7 @@
     display: none;
   }
 
+  /* Responsive */
   @media (max-width: 600px) {
     header, main { padding: 1.25rem; }
     h1 { font-size: 1.1rem; }
@@ -520,6 +549,7 @@
 </header>
 
 <main>
+  <!-- INPUT -->
   <div id="input-screen">
     <div class="section-label">Nhập đề bài</div>
     <textarea id="passage-input" placeholder="Paste đoạn văn Open Cloze vào đây...
@@ -529,7 +559,7 @@ The United States is an international center of culture. Its major cities (1) __
 
 Gap có thể ở dạng: (1) ______ hoặc (1)_____ hoặc (1) ___ đều được nhận diện tự động."></textarea>
     <p class="hint">
-      Hệ thống tự động nhận diện gap theo dạng <code>(số) ______</code> trong đoạn văn.
+      Hệ thống tự động nhận diện gap theo dạng <code>(số) ______</code> trong đoạn văn. 
       AI sẽ phân tích từng gap theo đúng phương pháp Open Cloze (Bước 1→2→3).
     </p>
     <div class="error-box" id="error-box"></div>
@@ -538,12 +568,14 @@ Gap có thể ở dạng: (1) ______ hoặc (1)_____ hoặc (1) ___ đều đư�
     </button>
   </div>
 
+  <!-- LOADING -->
   <div id="loading">
     <div class="spinner"></div>
     <p class="loading-text" id="loading-text">AI đang phân tích từng gap...</p>
     <p class="loading-text" id="loading-tokens" style="margin-top:0.4rem;font-size:0.7rem;opacity:0.5"></p>
   </div>
 
+  <!-- RESULT -->
   <div id="result-screen">
     <div class="result-header">
       <div>
@@ -555,13 +587,18 @@ Gap có thể ở dạng: (1) ______ hoặc (1)_____ hoặc (1) ___ đều đư�
     <div class="progress-bar">
       <div class="progress-fill" id="progress-fill"></div>
     </div>
-    <div class="gap-card" id="gap-card"></div>
+
+    <div class="gap-card" id="gap-card">
+      <!-- Filled by JS -->
+    </div>
+
     <div class="nav-buttons">
       <button class="btn-nav" id="btn-prev" onclick="navigate(-1)" disabled>← Trước</button>
       <button class="btn-nav btn-next" id="btn-next" onclick="navigate(1)">Tiếp →</button>
     </div>
   </div>
 
+  <!-- SUMMARY -->
   <div id="summary-screen">
     <div class="summary-title">✦ Hoàn thành!</div>
     <p class="summary-sub">Tổng hợp đáp án tất cả các gap</p>
@@ -583,6 +620,156 @@ Gap có thể ở dạng: (1) ______ hoặc (1)_____ hoặc (1) ___ đều đư�
 let gapData = [];
 let currentIndex = 0;
 
+const SYSTEM_PROMPT = `Bạn là chuyên gia phân tích bài Open Cloze tiếng Anh. Khi nhận được đoạn văn có các gap đánh số, hãy phân tích TỪNG GAP theo đúng phương pháp sau và trả về JSON.
+
+PHƯƠNG PHÁP:
+BƯỚC 1: Xác định chủ đề, thì chính, thái độ, văn phong của đoạn văn.
+BƯỚC 2: Với mỗi gap:
+  - Xác định từ ngay TRƯỚC gap (kèm loại từ: N/V/adj/adv/conj/prep...)
+  - Xác định từ/cụm ngay SAU gap (kèm loại từ)
+  - Ưu tiên kiểm tra cấu trúc cố định (Fixed Phrases) thuộc các nhóm:
+    * Nhóm 1: Cụm giới từ cố định (in spite of, on a ... scale, such as, including, in addition to...)
+    * Nhóm 2: Cụm liên từ (not only...but also, both...and, as soon as, even though, whether or not...)
+    * Nhóm 3: Cụm với động từ - Verb patterns (be interested in, depend on, lead to, participate in, emphasis on, be located in, well + V3...)
+    * Nhóm 4: Cấu trúc động từ nguyên mẫu (used to, in order to, fail to, manage to...)
+    * Nhóm 5: Prepositional Phrases with "To" — cụm kết thúc bằng "to" đứng TRƯỚC DANH TỪ (không phải to-infinitive): according to, due to, owing to, prior to, contrary to, thanks to, with regard to, in response to, as opposed to, subject to... → nhận diện qua pattern: ___ + to + N → cần điền phần đầu của cụm
+    * Nhóm 6: Đại từ quan hệ (those who, the way in which...)
+    * Nhóm 7: Cụm trạng từ (in fact, in general, for example...)
+    * Nhóm 8: Cụm so sánh (more than, rather than, such...that...)
+    * Nhóm 9: Cụm với AS (such as, as well as, be known as...)
+    * Nhóm 10: Discourse markers (in fact, on the whole...)
+  - Đối chiếu BẢNG 16 DẤU HIỆU sau (kể cả khi đã có fixed phrase, vẫn phải đối chiếu để tìm dấu hiệu chính xác nhất):
+
+    STT 1: ___ + N → article / determiner / adjective / preposition
+      [CHÚ Ý: gap đứng TRƯỚC N làm modifier. NẾU N là plural countable noun làm chủ ngữ không mang nghĩa khái quát → BẮT BUỘC có determiner (the/these/those/my/their...)]
+      Articles: a, an, the
+      Determiners: this/that/these/those, my/your/his/her/its/our/their, some/any/no/every/each/either/neither, much/many/more/most/few/little/several, all/both/half, what/which/whose
+      Adjectives phổ biến: big/small/large/huge/tiny, single/double/numerous/various, main/key/major/important/significant/crucial, current/present/past/future/recent/modern
+      Prepositions: in/on/at/from/to/for/with/without/by/about/of
+
+    STT 1b: prep + ___ → Noun làm tân ngữ của giới từ
+      [gap đứng SAU giới từ]
+
+    STT 2: ___ + V → subject pronoun / modal / adverb / auxiliary
+      Subject pronouns: I/you/he/she/it/we/they, this/that/these/those, who/which/what, everyone/someone/anyone/no one, everything/something/anything/nothing
+      Modals: can/could/may/might/must/shall/should/will/would, ought to/need to/have to/used to
+      Adverbs tần suất: always/usually/often/sometimes/rarely/never/seldom, already/still/yet/just, also/even/only/merely
+      Auxiliaries: do/does/did, am/is/are/was/were, have/has/had
+
+    STT 3: V + ___ → preposition / adverb / particle / pronoun / object (it, them)
+      Prepositions: at/on/in/to/for/with/from/about/of/by/into/onto/upon, during/throughout/through/across/along, among/between/behind/beside/beneath
+      Adverbs: well/hard/fast/quickly/slowly/carefully/clearly, very/quite/rather/fairly/too/enough, up/down/away/back/forward/ahead
+      Particles (phrasal verbs): up/down/out/in/off/on/over/away/back/through/around/about/along/across
+
+    STT 4: N + ___ + N → preposition / conjunction
+      Prepositions: of/in/on/at/to/for/with/from/by/about/between/among
+      Conjunctions: and/or/but/nor/yet
+
+    STT 5: ___ + adj/adv → adverb of degree / article
+      Adverbs of degree: very/extremely/incredibly/remarkably/particularly, quite/rather/fairly/pretty, too/so/as/how, more/most/less/least
+      Article đặc biệt: the (trước adj làm danh từ: the rich / the poor / the elderly)
+
+    STT 6: (S+V) + ___ + (S+V) → conjunction / relative pronoun / wh-word (noun clause)
+      a. Conjunctions (nối mệnh đề phụ): because/since/as, although/though/even though/while/whereas, if/unless/whether/provided that, when/while/as/before/after/until/since, so that/in order that
+         [Dấu hiệu: gap đầu mệnh đề phụ, KHÔNG sau giới từ, nếu đầu câu thì có dấu phẩy giữa 2 mệnh đề]
+      b. Relative pronouns (bổ nghĩa danh từ đứng trước): who/whom/whose/which/that, where/when/why
+         [Dấu hiệu: trước gap có DANH TỪ (antecedent), sau gap là mệnh đề thiếu thành phần]
+      c. Wh-word (noun clause làm chủ/tân ngữ): how/what/where/when/why/whether, how + adj/adv
+         [Dấu hiệu: trước gap là động từ (know/wonder/explain), tính từ (sure/worried/interested), hoặc giới từ; KHÔNG có danh từ antecedent]
+
+    STT 7: gap đầu câu (sau . / ; / xuống dòng) → discourse marker
+      [Thường có dấu phẩy ngay sau gap]
+      Đối lập: However/Nevertheless/Nonetheless/Yet/Still
+      Bổ sung: Moreover/Furthermore/Besides/Additionally/Also
+      Kết quả: Therefore/Thus/Hence/Consequently/Accordingly
+      Ví dụ: For example/For instance
+      Thứ tự/Tóm tắt: Firstly/Finally/In conclusion/Overall/In short
+      Thực tế: Indeed/In fact/Actually
+
+    STT 8: ___ + of + N → quantifier / pronoun
+      Quantifiers: all/most/some/any/none/much/many, both/half/part/majority/minority, one/two/three.., several/few/a few/little/a little
+      Pronouns: each/every/either/neither, what/whatever/which/whichever, somebody/someone/something, anybody/anyone/anything, nobody/no one/nothing
+
+    STT 9: ___ + than → comparative
+      more/less/fewer, better/worse, rather/other/sooner/later, higher/lower/greater/smaller
+      [Cũng gặp: The + comparative..., the + ___]
+
+    STT 10: ___ + V-ing → preposition / verb
+      [CHÚ Ý: chỉ dùng khi từ SAU gap THỰC SỰ là V-ing, không phải "to + N"]
+      Prepositions: by/without/before/after/since, for/from/in/on/at, despite/in spite of, instead of/because of
+      Verbs thường đi với V-ing: enjoy/avoid/consider/suggest, mind/miss/finish/practise, admit/deny/imagine/risk
+
+    STT 11: modal + ___ + V → have / be / not
+      have: tạo perfect infinitive (should have done / could have been)
+      be: tạo passive hoặc continuous (will be finished / might be working)
+      not: phủ định (may not know)
+
+    STT 12: be + ___ + to V → adjective
+      able/unable, likely/unlikely, willing/unwilling, ready/prepared, eager/reluctant
+      supposed/expected/believed/known/said, pleased/happy/glad, afraid/scared, certain/sure
+
+    STT 13: it + ___ + (adj) + (to V/that) → verb (be/takes/seems/appears)
+      [Cấu trúc dummy "it" — RẤT HAY RA]
+      Cũng gặp: make/consider + it + adj + to V; find + it + adj + that
+
+    STT 14: ___ + to V → verb / adjective / wh-word / noun
+      [CHÚ Ý: chỉ dùng khi "to" là to-infinitive trước ĐỘNG TỪ, KHÔNG phải preposition "to" trước N]
+      Verb + to V: agree/decide/fail/manage/refuse/tend/hope/plan
+      Adjective + to V: able/likely/ready/eager/willing/afraid
+      Noun + to V: decision/attempt/ability/opportunity/chance
+      Wh-word + to V: what/where/when/whether/how + to V
+
+    STT 15: A second/another/the first/... + ___ + is/was/suggests/shows/indicates that → discourse noun
+      Nhóm ý kiến/phát hiện: point/finding/argument/claim/suggestion/observation
+      Nhóm thay đổi/xu hướng: change/trend/development/shift
+      Nhóm khía cạnh/yếu tố: aspect/factor/element/feature
+      Nhóm vấn đề/thách thức: problem/issue/challenge/concern
+      Nhóm lợi ích/bất lợi: advantage/benefit/disadvantage/drawback
+
+    STT 16: S + V + O (S = O) + ___ → reflexive pronoun
+      myself/yourself/himself/herself/itself/ourselves/themselves
+
+  - QUAN TRỌNG: Nếu pattern thực tế KHÔNG khớp chính xác với bất kỳ STT nào, TUYỆT ĐỐI KHÔNG gán STT sai. Hãy TỰ SUY CÔNG THỨC từ context thực tế. Ghi "stt" là "Tự suy", "stt_pattern" là công thức thực tế tự rút ra (ví dụ: "prep + ___ + modal"), và "word_type_needed" là câu suy luận đầy đủ (ví dụ: "gap là Noun làm tân ngữ của giới từ"). Kết quả hiển thị: Dấu hiệu: [stt_pattern] → [word_type_needed].
+  - ĐẶC BIỆT QUAN TRỌNG: "word_type_needed" LUÔN ghi thành câu đầy đủ, mô tả chính xác vai trò ngữ pháp. KHÔNG ghi chỉ 1 từ như "Noun" hay "Preposition". Ví dụ đúng:
+    * "gap là Noun làm tân ngữ của giới từ in"
+    * "gap là Prepositional phrase with 'to' (according to / due to...)"
+    * "gap là Conjunction nối mệnh đề nguyên nhân"
+    * "gap là Relative pronoun bổ nghĩa cho danh từ đứng trước"
+    * "gap là Discourse marker chỉ sự đối lập"
+  - Xác định logic diễn ngôn (quan hệ nhân quả, đối lập, bổ sung...)
+BƯỚC 3: Chọn đáp án cuối cùng
+
+QUAN TRỌNG - FORMAT JSON trả về:
+{
+  "passage_analysis": {
+    "topic": "...",
+    "tense": "...",
+    "attitude": "...",
+    "style": "..."
+  },
+  "gaps": [
+    {
+      "gap_number": 1,
+      "full_sentence": "TOÀN BỘ câu đầy đủ từ đầu đến cuối (từ chữ hoa đầu câu đến dấu chấm), viết [GAP] thay cho chỗ trống. KHÔNG được cắt bớt hay chỉ lấy một phần câu — người đọc cần ngữ cảnh đầy đủ để làm bài",
+      "before_word": "từ ngay trước gap",
+      "before_type": "loại từ (N/V/adj/adv/conj/prep/...)",
+      "after_word": "từ/cụm ngay sau gap",
+      "after_type": "loại từ",
+      "has_fixed_phrase": true hoặc false,
+      "fixed_phrase": "tên cụm cố định nếu có, ví dụ: on a ... scale",
+      "fixed_phrase_group": "Nhóm X (tên nhóm)" hoặc null,
+      "stt": "STT X" — LUÔN LUÔN điền, kể cả khi đã có fixed phrase,
+      "stt_pattern": "pattern của STT đó, ví dụ: adj + ___ + of" — LUÔN LUÔN điền, kể cả khi đã có fixed phrase,
+      "word_type_needed": "loại từ cần điền",
+      "logic": "giải thích logic diễn ngôn/ngữ nghĩa tại sao chọn đáp án này",
+      "answer": "ĐÁP ÁN",
+      "note": "ghi chú thêm nếu có (phân biệt với từ dễ nhầm...)"
+    }
+  ]
+}
+
+Chỉ trả về JSON, không thêm bất kỳ text nào khác.`;
+
 async function analyzePassage() {
   const passage = document.getElementById('passage-input').value.trim();
   if (!passage) {
@@ -590,6 +777,7 @@ async function analyzePassage() {
     return;
   }
 
+  // Check gaps exist
   const gapPattern = /\(\d+\)\s*_{2,}/g;
   const gaps = passage.match(gapPattern);
   if (!gaps || gaps.length === 0) {
@@ -618,6 +806,7 @@ async function analyzePassage() {
     let charCount = 0;
 
     const loadingTokenEl = document.getElementById('loading-tokens');
+    const loadingTextEl = document.getElementById('loading-text');
 
     while (true) {
       const { done, value } = await reader.read();
@@ -630,47 +819,28 @@ async function analyzePassage() {
       for (const line of lines) {
         if (!line.startsWith('data: ')) continue;
         const data = line.slice(6).trim();
-        if (data === '[DONE]') continue;
+        if (!data || data === '[DONE]') continue;
         try {
           const evt = JSON.parse(data);
-          let text = '';
-          if (evt.type === 'content_block_delta' && evt.delta && evt.delta.text) {
-            text = evt.delta.text;
-          }
-          // Xử lý lỗi từ server
-          if (evt.type === 'error') {
-            throw new Error(evt.message || 'Lỗi từ server');
-          }
+          // Gemini format
+          const text = evt.candidates?.[0]?.content?.parts?.[0]?.text;
           if (text) {
             fullText += text;
             charCount += text.length;
             if (loadingTokenEl) loadingTokenEl.textContent = charCount + ' ký tự nhận được...';
           }
-        } catch (parseErr) {
-          // Bỏ qua lỗi parse từng dòng SSE
-        }
+          // Anthropic format (fallback)
+          if (evt.type === 'content_block_delta' && evt.delta?.text) {
+            fullText += evt.delta.text;
+            charCount += evt.delta.text.length;
+            if (loadingTokenEl) loadingTokenEl.textContent = charCount + ' ký tự nhận được...';
+          }
+        } catch {}
       }
     }
 
-    // ✅ FIX: Xử lý JSON an toàn hơn
-    if (!fullText || fullText.trim() === '') {
-      throw new Error('Không nhận được dữ liệu từ AI. Vui lòng thử lại!');
-    }
-
-    // Làm sạch markdown nếu có
-    let clean = fullText.replace(/```json/g, '').replace(/```/g, '').trim();
-
-    // Tìm JSON object hợp lệ trong response
-    const jsonMatch = clean.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error('Dữ liệu AI không đúng định dạng. Vui lòng thử lại!');
-    }
-
-    const parsed = JSON.parse(jsonMatch[0]);
-
-    if (!parsed.gaps || !Array.isArray(parsed.gaps) || parsed.gaps.length === 0) {
-      throw new Error('AI không trả về danh sách gap. Vui lòng thử lại!');
-    }
+    const clean = '{"passage_analysis":' + fullText.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
 
     gapData = parsed.gaps;
     currentIndex = 0;
@@ -701,11 +871,13 @@ function renderGap(index) {
   const btnNext = document.getElementById('btn-next');
   btnNext.textContent = isLast ? 'Xem tổng hợp ✦' : 'Tiếp →';
 
+  // Render full sentence with gap highlighted
   const sentenceHtml = (g.full_sentence || '').replace(
     '[GAP]',
     `<span class="gap-highlight">( ${g.gap_number} ) ______</span>`
   );
 
+  // Fixed phrase section
   let fixedHtml = '';
   if (g.has_fixed_phrase && g.fixed_phrase) {
     fixedHtml = `<span class="fixed-phrase-tag"><em><strong>${g.fixed_phrase}</strong></em></span> → thuộc <strong>${g.fixed_phrase_group || 'cụm cố định'}</strong> → <span style="color:var(--success)">điền ngay ✓</span>`;
@@ -713,6 +885,7 @@ function renderGap(index) {
     fixedHtml = `<span style="color:var(--muted)">Không nhận ra cụm cố định → đối chiếu bảng nhận diện</span>`;
   }
 
+  // Signal / STT section — always show
   let signalHtml = '';
   if (g.stt && g.stt !== 'Tự suy' && g.stt_pattern) {
     signalHtml = `Dấu hiệu <span class="stt-badge">${g.stt}</span>: <span class="tag">${g.stt_pattern}</span> → ${g.word_type_needed || ''}`;
@@ -730,8 +903,11 @@ function renderGap(index) {
         <div class="card-title">Open Cloze Analysis</div>
       </div>
     </div>
+
     <div class="full-sentence">${sentenceHtml}</div>
+
     <div class="analysis-body">
+
       <div class="analysis-row">
         <div class="row-icon icon-context">🔍</div>
         <div class="row-content">
@@ -743,6 +919,7 @@ function renderGap(index) {
           </div>
         </div>
       </div>
+
       <div class="analysis-row">
         <div class="row-icon icon-fixed">⚡</div>
         <div class="row-content">
@@ -750,6 +927,7 @@ function renderGap(index) {
           <div class="row-text">${fixedHtml}</div>
         </div>
       </div>
+
       <div class="analysis-row">
         <div class="row-icon icon-signal">📊</div>
         <div class="row-content">
@@ -757,6 +935,7 @@ function renderGap(index) {
           <div class="row-text">${signalHtml}</div>
         </div>
       </div>
+
       <div class="analysis-row">
         <div class="row-icon icon-logic">💡</div>
         <div class="row-content">
@@ -764,6 +943,7 @@ function renderGap(index) {
           <div class="row-text">${g.logic || ''}${g.note ? `<br><span style="color:var(--muted);font-size:0.82rem">⚠ ${g.note}</span>` : ''}</div>
         </div>
       </div>
+
       <div class="answer-section">
         <div>
           <div class="answer-label">Đáp án</div>
@@ -771,9 +951,11 @@ function renderGap(index) {
         </div>
         <div class="answer-checkmark">✓</div>
       </div>
+
     </div>
   `;
 
+  // Force re-animation
   card.style.animation = 'none';
   card.offsetHeight;
   card.style.animation = '';
@@ -782,10 +964,12 @@ function renderGap(index) {
 function navigate(dir) {
   const newIndex = currentIndex + dir;
   if (newIndex < 0) return;
+
   if (newIndex >= gapData.length) {
     showSummary();
     return;
   }
+
   currentIndex = newIndex;
   renderGap(currentIndex);
 }
